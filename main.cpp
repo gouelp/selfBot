@@ -10,17 +10,36 @@
 #include <avr/interrupt.h>
 #include <stdio.h>
 
+#include "detection.h"
+
+char time_count = 0;
+
 int main(void){
-    DDRB = 0x0F;
-    PORTB = 0x0A;
-    DDRD |= (1 << 6) | (1<<5);
-	TCNT0 = 0;
-	TCCR0A = 0xA3;
+    init_servo();
+	init_usSensor();
+	TCNT0 = 0x00;
+	TCCR0A = 0x00;
 	TCCR0B = 0x05;
-	OCR0A = 0x00;
-	OCR0B = 0x00;
-    while (1) {
-		
-    }
+	TIMSK0 |= (1<<TOIE0);
+	
+	sei();
+    while (1);
 }
 
+ISR (TIMER0_OVF_vect){
+	if(time_count<= 40){ //Wait for 40 interrupts, because the maximum time of timer 0 is too short to give motor the time to correctly turn
+		time_count++;
+		return;
+	}
+	time_count = 0;
+	unsigned dist = calc_dist();
+	if(dist >= 1 && dist <= 10){
+		turn_servo(10);		//right position
+	}
+	else if (dist < 25){
+	 turn_servo(25);	// front position
+	}
+	else{
+		turn_servo(41); // left position
+	}
+}
