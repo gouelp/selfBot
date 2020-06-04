@@ -12,7 +12,11 @@
 
 #include "detection.h"
 
+#define SET_TIMER 0
+
 char time_count = 0;
+
+void init_interrup(char timer);
 
 int main(void){
     init_servo();
@@ -20,10 +24,17 @@ int main(void){
 	TCNT0 = 0x00;
 	TCCR0A = 0x00;
 	TCCR0B = 0x05;
-	TIMSK0 |= (1<<TOIE0);
 	
-	sei();
+	init_interrup(SET_TIMER);
+	
     while (1);
+}
+
+void init_interrup(char timer){
+	if(timer == 0){
+		TIMSK0 |= (1<<TOIE0);
+	}
+	sei();
 }
 
 ISR (TIMER0_OVF_vect){
@@ -34,12 +45,12 @@ ISR (TIMER0_OVF_vect){
 	time_count = 0;
 	unsigned dist = calc_dist();
 	if(dist >= 1 && dist <= 10){
-		turn_servo(10);		//right position
+		turn_servo(180);
 	}
 	else if (dist < 25){
-	 turn_servo(25);	// front position
+	 turn_servo(90);
 	}
 	else{
-		turn_servo(41); // left position
+		turn_servo(0);
 	}
 }
