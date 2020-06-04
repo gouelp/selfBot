@@ -2,7 +2,10 @@
  * selfBotControl.cpp
  *
  * Created: 02/06/2020 09:30:21
- * Author : Yaya
+ * Last updated : 04/06/2020
+ * Author : Pierre-Vincent Gouel
+ * Description : 
+ * This file is the main file of the code that as for purpose to control a small and cheap autonomous rover based on Arduino but programmed without libraries
  */ 
 
 /*
@@ -24,21 +27,23 @@ char time_count = 0;
 void init_interrup(char timer);
 
 int main(void){
+/*
+	Main function of the robot project
+*/
     init_servo();
 	init_usSensor();
-	
 	init_PWM();
-	
-/*	TCNT0 = 0x00;
-	TCCR0A = 0x00;
-	TCCR0B = 0x05;
-*/
 	init_interrup(SET_TIMER);
 	
     while (1);
 }
 
 void init_interrup(char timer){
+/*
+	This function initialize the interrupt bit of the appropriate timer register, and enable the global interruption system
+	@Param : None
+	@Return : None
+*/
 	if(timer == 0){
 		TIMSK0 |= (1<<TOIE0);
 	}
@@ -46,7 +51,12 @@ void init_interrup(char timer){
 }
 
 ISR (TIMER0_OVF_vect){
-	if(time_count<= 40){ //Wait for 40 interrupts, because the maximum time of timer 0 is too short to give motor the time to correctly turn
+/*
+	Interruption routine
+*/
+
+//Wait for 40 interrupts, because the maximum time of timer 0 is too short to give motor the time to correctly turn
+	if(time_count<= 40){ 
 		time_count++;
 		return;
 	}
