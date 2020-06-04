@@ -15,6 +15,7 @@
 
 void init_PWM();
 char set_direction(char dir);
-void change_PWM(char ratio);
+void change_PWM(char left_motor,char right_motor);
+void stop_robot();
 
 #endif

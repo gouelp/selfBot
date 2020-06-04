@@ -27,22 +27,26 @@ char set_direction(char dir){
 // If the order is forward the 2 motors turn in opposite directions to make wheels go in the same direction, and the robot goes forward
 	if(dir == FORWARD){
 		PORTB |= (1 << DIR_R_1) | (1 << DIR_L_2);
-		PORTB &= ~(1 << DIR_L_1) & ~(1 << DIR_R_2);
+		PORTB &= ~(1 << DIR_L_1);
+		PORTD &= ~(1 << DIR_R_2);
 	}
 // If the order is backward the 2 motors turn in opposite directions to make wheels go in the same direction, and the robot goes backward 
 	else if(dir == BACKWARD){
-		PORTB |= (1 << DIR_L_1) | (1 << DIR_R_2);
+		PORTB |= (1 << DIR_L_1);
 		PORTB &= ~(1 << DIR_R_1) & ~(1 << DIR_L_2);
+		PORTD |= (1 << DIR_R_2);
 	}
 /// If the order is static right, the motors turn in the same direction to make wheel turn in opposite direction and the robot turn on itself (left)
 	else if(dir == STATIC_LEFT){
-		PORTB |= (1 << DIR_R_2) | (1 << DIR_L_2);
+		PORTB |= (1 << DIR_L_2);
 		PORTB &= ~(1 << DIR_L_1) & ~(1 << DIR_R_1);
+		PORTD |= (1 << DIR_R_2);
 	}
 // If the order is static right, the motors turn in the same direction to make wheel turn in opposite direction and the robot turn on itself (right)
 	else if(dir == STATIC_RIGHT){
 		PORTB |= (1 << DIR_R_1) | (1 << DIR_L_1);
-		PORTB &= ~(1 << DIR_R_2) & ~(1 << DIR_L_2);
+		PORTB &= ~(1 << DIR_L_2);
+		PORTD &= ~(1 << DIR_R_2);
 	}
 // If it's not a known order, return -1 as error
 	else{

@@ -28,6 +28,7 @@ void turn_servo(unsigned char angle){
 	@Return : None
 */
 	OCR1B = 4800-(21*angle);
+//	OCR1B = 1050+(21*angle);
 }
 
 void init_usSensor(){
@@ -51,8 +52,8 @@ unsigned int calc_dist(){
 	long mesloop = 0;
 // Set the Timer for 10us, start it and trigger the sensor
 	TCNT2 = 0xEB;
-	TCCR2B = 0x02;
 	PORTD |= (1<<US_TRIGGER);
+	TCCR2B = 0x02;
 // Wait for 10us and stop the trigger and reset the Timer
 	while((TIFR2&(1<<TOV2))==0); 
 	PORTD &= ~(1<<US_TRIGGER);
